@@ -2,7 +2,6 @@ package server
 
 import (
 	"ApiSup/internal/config"
-	"ApiSup/internal/database"
 	"ApiSup/internal/middlewares"
 	"ApiSup/internal/routes"
 	"os"
@@ -21,7 +20,7 @@ func Run() {
 	e.Use(middleware.Recover())
 	e.Use(middlewares.ConfigureCORS())
 
-	database.Initialize()
+	config.Initialize()
 
 	routes.InitializeRoutes(e)
 

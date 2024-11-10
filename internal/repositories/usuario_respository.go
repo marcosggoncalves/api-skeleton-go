@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"ApiSup/internal/database"
+	"ApiSup/internal/config"
 	"ApiSup/internal/models"
 	"ApiSup/pkg/pagination"
 
@@ -23,7 +23,7 @@ type userRepository struct {
 }
 
 func NewUserRepository() UserRepository {
-	return &userRepository{db: database.DB}
+	return &userRepository{db: config.DB}
 }
 
 func (r *userRepository) GetUserByCPF(cpf string) (*models.Usuario, error) {
