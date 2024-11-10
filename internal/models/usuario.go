@@ -1,35 +1,72 @@
 package models
 
 import (
-	"time"
+	"ApiSup/pkg/mapear/constants"
+	"errors"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type Usuario struct {
-	gorm.Model
-	Nome      string         `json:"nome"`
-	CPF       string         `json:"cpf"`
-	Email     string         `json:"email"`
-	Senha     string         `json:"senha"`
-	IsAtivo   int            `json:"is_ativo"`
-	CreatedAt *time.Time     `gorm:"column:created_at;autoCreateTime" json:"CreatedAt"`
-	UpdatedAt *time.Time     `gorm:"column:updated_at;autoUpdateTime" json:"UpdatedAt"`
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at" json:"DeletedAt"`
+	BaseModel
+	Nome  string `json:"nome"`
+	CPF   string `json:"cpf"`
+	Email string `json:"email"`
+	Senha string `json:"senha"`
 }
 
-func (u *Usuario) BeforeSave(tx *gorm.DB) (err error) {
-	if u.Senha != "" {
-		hashedSenha, err := bcrypt.GenerateFromPassword([]byte(u.Senha), bcrypt.DefaultCost)
-		if err != nil {
-			return err
-		}
-		u.Senha = string(hashedSenha)
+type UsuarioView struct {
+	BaseModel
+	Nome string `json:"nome"`
+	CPF  string `json:"cpf"`
+}
+
+func UniqueCPF(cpf string, tx *gorm.DB, model interface{}) (err error) {
+	var count int64
+
+	if err := tx.Model(&model).Where("cpf = ?", cpf).Count(&count).Error; err != nil {
+		return err
 	}
+	if count > 0 {
+		return errors.New(constants.CPF_INVALIDO)
+	}
+
+	return nil
+}
+
+func Criptografia(senha string) (password string, err error) {
+	if senha != "" {
+		hashedSenha, err := bcrypt.GenerateFromPassword([]byte(senha), bcrypt.DefaultCost)
+		if err != nil {
+			return senha, err
+		}
+		senha = string(hashedSenha)
+	}
+
+	return senha, nil
+}
+
+func (u *Usuario) BeforeCreate(tx *gorm.DB) (err error) {
+	err = UniqueCPF(u.CPF, tx, u)
+	if err != nil {
+		return err
+	}
+
+	senha, err := Criptografia(u.Senha)
+	if err != nil {
+		return err
+	}
+
+	u.Senha = senha
+
 	return nil
 }
 
 func (Usuario) TableName() string {
+	return "usuario"
+}
+
+func (UsuarioView) TableName() string {
 	return "usuario"
 }

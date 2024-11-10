@@ -1,6 +1,8 @@
 package database
 
 import (
+	"ApiSup/pkg/mapear/constants"
+	"fmt"
 	"log"
 	"os"
 
@@ -10,14 +12,19 @@ import (
 )
 
 func Connect() (*gorm.DB, error) {
-	return gorm.Open(mysql.Open(os.Getenv("string_mysql")), &gorm.Config{})
+	return gorm.Open(mysql.Open(fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
+		os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_SENHA"),
+		os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"),
+		os.Getenv("MYSQL_DATABASE"),
+	)), &gorm.Config{})
 }
 
 var DB *gorm.DB
 
 func Initialize() *gorm.DB {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Erro ao carregar o arquivo .env")
+		log.Fatal(constants.ERROR_CARREGAMENTO_ENV)
 	}
 
 	dbConn, err := Connect()

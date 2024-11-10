@@ -2,7 +2,9 @@ package services
 
 import (
 	"ApiSup/internal/models"
-	"ApiSup/internal/repository"
+	"ApiSup/internal/repositories"
+	"ApiSup/pkg/mapear/constants"
+	"ApiSup/pkg/mapear/request"
 	"ApiSup/pkg/pagination"
 	"errors"
 
@@ -11,41 +13,42 @@ import (
 )
 
 type UserService interface {
-	Authenticate(cpf, senha string) (*models.Usuario, error)
+	Authenticate(body request.Login) (*models.Usuario, error)
 	Detalhar(id int) (*models.Usuario, error)
-	Usuarios(c echo.Context) (*pagination.Pagination, error)
+	Listagem(c echo.Context) (*pagination.Pagination, error)
 	Novo(user *models.Usuario) error
 	Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error)
 	Deletar(id int) error
 }
 
 type userService struct {
-	userRepo repository.UserRepository
+	userRepo repositories.UserRepository
 }
 
-func NewUserService(userRepo repository.UserRepository) UserService {
+func NewUserService(userRepo repositories.UserRepository) UserService {
 	return &userService{userRepo: userRepo}
 }
 
-func (s *userService) Authenticate(cpf, senha string) (*models.Usuario, error) {
-	user, err := s.userRepo.GetUserByCPF(cpf)
+func (s *userService) Authenticate(body request.Login) (*models.Usuario, error) {
+	user, err := s.userRepo.GetUserByCPF(body.CPF)
 	if err != nil {
-		return nil, errors.New("usuário não foi localizado, inválido")
+		return nil, errors.New(constants.USUARIO_ENCONTRADO)
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(user.Senha), []byte(senha))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Senha), []byte(body.Senha))
 	if err != nil {
-		return nil, errors.New("senha inválida")
+		return nil, errors.New(constants.SENHA_INVALIDA)
 	}
 
 	return user, nil
 }
+
 func (s *userService) Detalhar(id int) (*models.Usuario, error) {
 	return s.userRepo.Detalhar(id)
 }
 
-func (s *userService) Usuarios(c echo.Context) (*pagination.Pagination, error) {
-	return s.userRepo.Usuarios(c)
+func (s *userService) Listagem(c echo.Context) (*pagination.Pagination, error) {
+	return s.userRepo.Listagem(c)
 }
 
 func (s *userService) Novo(user *models.Usuario) error {

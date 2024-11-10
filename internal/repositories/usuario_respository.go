@@ -1,4 +1,4 @@
-package repository
+package repositories
 
 import (
 	"ApiSup/internal/database"
@@ -12,7 +12,7 @@ import (
 type UserRepository interface {
 	GetUserByCPF(cpf string) (*models.Usuario, error)
 	Detalhar(id int) (*models.Usuario, error)
-	Usuarios(c echo.Context) (*pagination.Pagination, error)
+	Listagem(c echo.Context) (*pagination.Pagination, error)
 	Novo(user *models.Usuario) error
 	Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error)
 	Deletar(id int) error
@@ -42,8 +42,8 @@ func (r *userRepository) Detalhar(id int) (*models.Usuario, error) {
 	return user, nil
 }
 
-func (r *userRepository) Usuarios(c echo.Context) (*pagination.Pagination, error) {
-	var users []models.Usuario
+func (r *userRepository) Listagem(c echo.Context) (*pagination.Pagination, error) {
+	var users []models.UsuarioView
 
 	paginations, err := pagination.Paginate(c, r.db, &users)
 
@@ -55,7 +55,7 @@ func (r *userRepository) Usuarios(c echo.Context) (*pagination.Pagination, error
 }
 
 func (r *userRepository) Novo(user *models.Usuario) error {
-	return r.db.Create(user).Error
+	return r.db.Save(user).Error
 }
 
 func (r *userRepository) Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error) {

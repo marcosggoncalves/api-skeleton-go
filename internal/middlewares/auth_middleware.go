@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"ApiSup/pkg/hashing"
+	"ApiSup/pkg/mapear/constants"
 	"ApiSup/pkg/mapear/response"
 	"net/http"
 
@@ -10,12 +11,17 @@ import (
 )
 
 func VerifyTokenHandler() echo.MiddlewareFunc {
-	handler := echojwt.JWT([]byte(hashing.Key))
+	jwtMiddleware := echojwt.JWT([]byte(hashing.Key))
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			if err := handler(next)(c); err != nil {
-				return c.JSON(http.StatusUnauthorized, response.Error{Message: "Acesso não autorizado!", Description: err})
+			if err := jwtMiddleware(func(c echo.Context) error {
+				return nil
+			})(c); err != nil {
+				return c.JSON(http.StatusUnauthorized, response.Error{
+					Message:     constants.ACESSO_NAO_AUTORIZADO,
+					Description: err,
+				})
 			}
 			return next(c)
 		}

@@ -1,9 +1,10 @@
-package controller
+package controllers
 
 import (
-	"ApiSup/internal/config/auth"
+	"ApiSup/internal/config"
 	"ApiSup/internal/models"
 	"ApiSup/internal/services"
+	"ApiSup/pkg/mapear/constants"
 	"ApiSup/pkg/mapear/request"
 	"ApiSup/pkg/mapear/response"
 	"net/http"
@@ -25,18 +26,22 @@ func NewUserController(userService services.UserService) *UserController {
 func (controller *UserController) Login(c echo.Context) error {
 	var body request.Login
 	if err := c.Bind(&body); err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "Falha Body!", Description: err.Error()})
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.BODY_FALHA, Description: err.Error()})
+	}
+
+	if err := c.Validate(body); err != nil {
+		return config.ValidationErrors(c, err)
 	}
 
 	var usuario *models.Usuario
-	usuario, err := controller.UserService.Authenticate(body.CPF, body.Senha)
+	usuario, err := controller.UserService.Authenticate(body)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, response.Error{Message: "Acesso não Autorizado!", Description: err.Error()})
+		return c.JSON(http.StatusUnauthorized, response.Error{Message: constants.ACESSO_NAO_AUTORIZADO, Description: err.Error()})
 	}
 
-	tokenString, err := auth.GenerateJWT(*usuario)
+	tokenString, err := config.GenerateJWT(*usuario)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, response.Error{Message: "Falha Autenticação", Description: err.Error()})
+		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.FALHA_AUTENTICAO, Description: err.Error()})
 	}
 
 	response := response.Token{
@@ -47,70 +52,78 @@ func (controller *UserController) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func (controller *UserController) GetUser(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+func (controller *UserController) Listagem(c echo.Context) error {
+	users, err := controller.UserService.Listagem(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "ID não foi informado!", Description: err.Error()})
-	}
-
-	user, err := controller.UserService.Detalhar(id)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, response.Error{Message: "Usuário não encontrado!", Description: err.Error()})
-	}
-
-	return c.JSON(http.StatusOK, user)
-}
-
-func (controller *UserController) GetUsers(c echo.Context) error {
-	users, err := controller.UserService.Usuarios(c)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, response.Error{Message: "Não foi possivel listar usuários!", Description: err.Error()})
+		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.ERRO_LISTAGEM_REGISTRO, Description: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, users)
 }
 
-func (controller *UserController) CreateUser(c echo.Context) error {
+func (controller *UserController) Get(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.ID_NAO_INFORMADO, Description: err.Error()})
+	}
+
+	user, err := controller.UserService.Detalhar(id)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, response.Error{Message: constants.REGISTRO_NAO_ENCONTRADO, Description: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, user)
+}
+
+func (controller *UserController) Created(c echo.Context) error {
 	var user models.Usuario
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "Falha Body!", Description: err.Error()})
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.BODY_FALHA, Description: err.Error()})
+	}
+
+	if err := c.Validate(user); err != nil {
+		return config.ValidationErrors(c, err)
 	}
 
 	if err := controller.UserService.Novo(&user); err != nil {
-		return c.JSON(http.StatusInternalServerError, response.Error{Message: "Não foi possivel cadastrar novo usuário!", Description: err.Error()})
+		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.CADASTRO_FALHA_INSERCAO, Description: err.Error()})
 	}
 
-	return c.JSON(http.StatusCreated, response.Success{Message: "Usuário cadastrado com sucesso!"})
+	return c.JSON(http.StatusCreated, response.Success{Message: constants.CADASTRO_REALIZADO})
 }
 
-func (controller *UserController) UpdateUser(c echo.Context) error {
+func (controller *UserController) Updated(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "ID não foi informado!", Description: err.Error()})
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.ID_NAO_INFORMADO, Description: err.Error()})
 	}
 
 	var updatedUser models.Usuario
 	if err := c.Bind(&updatedUser); err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "Falha Body!", Description: err.Error()})
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.BODY_FALHA, Description: err.Error()})
+	}
+
+	if err := c.Validate(updatedUser); err != nil {
+		return config.ValidationErrors(c, err)
 	}
 
 	user, err := controller.UserService.Editar(id, &updatedUser)
 	if err != nil {
-		return c.JSON(http.StatusNotFound, response.Error{Message: "Usuário não encontrado!", Description: err.Error()})
+		return c.JSON(http.StatusNotFound, response.Error{Message: constants.REGISTRO_NAO_ENCONTRADO, Description: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, response.SuccessBody{Message: "Cadastrado alterado sucesso!", Body: user})
+	return c.JSON(http.StatusOK, response.SuccessBody{Message: constants.CADASTRO_ALTERADO, Body: user})
 }
 
-func (controller *UserController) DeleteUser(c echo.Context) error {
+func (controller *UserController) Deleted(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, response.Error{Message: "ID não foi informado!", Description: err.Error()})
+		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.ID_NAO_INFORMADO, Description: err.Error()})
 	}
 
 	if err := controller.UserService.Deletar(id); err != nil {
-		return c.JSON(http.StatusInternalServerError, response.Error{Message: "Não foi possivel deletar usuário!", Description: err.Error()})
+		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.CADASTRO_FALHA_EXCLUSAO, Description: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, response.Success{Message: "Cadastrado deletado com sucesso!"})
+	return c.JSON(http.StatusOK, response.Success{Message: constants.CADASTRO_EXCLUIDO})
 }
