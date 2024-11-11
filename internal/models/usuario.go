@@ -10,10 +10,10 @@ import (
 
 type Usuario struct {
 	BaseModel
-	Nome  string `json:"nome"`
-	CPF   string `json:"cpf"`
-	Email string `json:"email"`
-	Senha string `json:"senha"`
+	Nome  string `json:"nome" validate:"required"`
+	CPF   string `json:"cpf" validate:"required"`
+	Email string `json:"email" validate:"required"`
+	Senha string `json:"senha" validate:"required"`
 }
 
 type UsuarioView struct {
