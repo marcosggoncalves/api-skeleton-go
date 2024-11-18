@@ -7,17 +7,24 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func Connect() (*gorm.DB, error) {
-	return gorm.Open(mysql.Open(fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
-		os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_SENHA"),
-		os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"),
-		os.Getenv("MYSQL_DATABASE"),
-	)), &gorm.Config{})
+	dsn := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s",
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_SENHA"),
+		os.Getenv("POSTGRES_DATABASE"),
+	)
+
+	return gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info), /// Mostrar logs de operações do banco
+	})
 }
 
 var DB *gorm.DB
