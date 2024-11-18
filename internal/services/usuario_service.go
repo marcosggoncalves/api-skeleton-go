@@ -22,15 +22,15 @@ type UserService interface {
 }
 
 type userService struct {
-	userRepo repositories.UserRepository
+	repository repositories.UserRepository
 }
 
 func NewUserService(userRepo repositories.UserRepository) UserService {
-	return &userService{userRepo: userRepo}
+	return &userService{repository: userRepo}
 }
 
 func (s *userService) Authenticate(body request.Login) (*models.Usuario, error) {
-	user, err := s.userRepo.GetUserByCPF(body.CPF)
+	user, err := s.repository.GetUserByCPF(body.CPF)
 	if err != nil {
 		return nil, errors.New(constants.USUARIO_ENCONTRADO)
 	}
@@ -44,21 +44,30 @@ func (s *userService) Authenticate(body request.Login) (*models.Usuario, error) 
 }
 
 func (s *userService) Detalhar(id int) (*models.Usuario, error) {
-	return s.userRepo.Detalhar(id)
+	return s.repository.Detalhar(id)
 }
 
 func (s *userService) Listagem(c echo.Context) (*pagination.Pagination, error) {
-	return s.userRepo.Listagem(c)
+	return s.repository.Listagem(c)
 }
 
 func (s *userService) Novo(user *models.Usuario) error {
-	return s.userRepo.Novo(user)
+	return s.repository.Novo(user)
 }
 
-func (s *userService) Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error) {
-	return s.userRepo.Editar(id, updatedUser)
+func (s *userService) Editar(id int, updated *models.Usuario) (*models.Usuario, error) {
+	if updated.Senha != "" {
+		hashedSenha, err := models.Criptografia(updated.Senha)
+		if err != nil {
+			return nil, err
+		}
+
+		updated.Senha = hashedSenha
+	}
+
+	return s.repository.Editar(id, updated)
 }
 
 func (s *userService) Deletar(id int) error {
-	return s.userRepo.Deletar(id)
+	return s.repository.Deletar(id)
 }

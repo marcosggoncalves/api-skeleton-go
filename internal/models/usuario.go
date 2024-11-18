@@ -18,8 +18,10 @@ type Usuario struct {
 
 type UsuarioView struct {
 	BaseModel
-	Nome string `json:"nome"`
-	CPF  string `json:"cpf"`
+	Nome          string      `json:"nome"`
+	CPF           string      `json:"cpf"`
+	UsuarioTipoID uint        `json:"usuario_tipo_id"  validate:"required"`
+	UsuarioTipo   UsuarioTipo `json:"tipo" gorm:"foreignKey:UsuarioTipoID" validate:"-"`
 }
 
 func UniqueCPF(cpf string, tx *gorm.DB, model interface{}) (err error) {

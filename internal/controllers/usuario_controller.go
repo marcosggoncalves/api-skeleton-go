@@ -14,12 +14,12 @@ import (
 )
 
 type UserController struct {
-	UserService services.UserService
+	service services.UserService
 }
 
 func NewUserController(userService services.UserService) *UserController {
 	return &UserController{
-		UserService: userService,
+		service: userService,
 	}
 }
 
@@ -34,7 +34,7 @@ func (controller *UserController) Login(c echo.Context) error {
 	}
 
 	var usuario *models.Usuario
-	usuario, err := controller.UserService.Authenticate(body)
+	usuario, err := controller.service.Authenticate(body)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, response.Error{Message: constants.ACESSO_NAO_AUTORIZADO, Description: err.Error()})
 	}
@@ -53,7 +53,7 @@ func (controller *UserController) Login(c echo.Context) error {
 }
 
 func (controller *UserController) Listagem(c echo.Context) error {
-	users, err := controller.UserService.Listagem(c)
+	users, err := controller.service.Listagem(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.ERRO_LISTAGEM_REGISTRO, Description: err.Error()})
 	}
@@ -67,7 +67,7 @@ func (controller *UserController) Get(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.ID_NAO_INFORMADO, Description: err.Error()})
 	}
 
-	user, err := controller.UserService.Detalhar(id)
+	user, err := controller.service.Detalhar(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, response.Error{Message: constants.REGISTRO_NAO_ENCONTRADO, Description: err.Error()})
 	}
@@ -85,7 +85,7 @@ func (controller *UserController) Created(c echo.Context) error {
 		return config.ValidationErrors(c, err)
 	}
 
-	if err := controller.UserService.Novo(&user); err != nil {
+	if err := controller.service.Novo(&user); err != nil {
 		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.CADASTRO_FALHA_INSERCAO, Description: err.Error()})
 	}
 
@@ -107,7 +107,7 @@ func (controller *UserController) Updated(c echo.Context) error {
 		return config.ValidationErrors(c, err)
 	}
 
-	user, err := controller.UserService.Editar(id, &updatedUser)
+	user, err := controller.service.Editar(id, &updatedUser)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, response.Error{Message: constants.REGISTRO_NAO_ENCONTRADO, Description: err.Error()})
 	}
@@ -121,7 +121,7 @@ func (controller *UserController) Deleted(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response.Error{Message: constants.ID_NAO_INFORMADO, Description: err.Error()})
 	}
 
-	if err := controller.UserService.Deletar(id); err != nil {
+	if err := controller.service.Deletar(id); err != nil {
 		return c.JSON(http.StatusInternalServerError, response.Error{Message: constants.CADASTRO_FALHA_EXCLUSAO, Description: err.Error()})
 	}
 

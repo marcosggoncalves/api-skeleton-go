@@ -45,7 +45,7 @@ func (r *userRepository) Detalhar(id int) (*models.Usuario, error) {
 func (r *userRepository) Listagem(c echo.Context) (*pagination.Pagination, error) {
 	var users []models.UsuarioView
 
-	paginations, err := pagination.Paginate(c, r.db, &users)
+	paginations, err := pagination.Paginate(c, r.db, &users, nil, "UsuarioTipo")
 
 	if err != nil {
 		return nil, err
