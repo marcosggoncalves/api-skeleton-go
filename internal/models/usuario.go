@@ -18,7 +18,7 @@ type Usuario struct {
 }
 
 type UsuarioView struct {
-	BaseModel
+	ID            uint        `json:"id"`
 	Nome          string      `json:"nome"`
 	CPF           string      `json:"cpf"`
 	UsuarioTipoID uint        `json:"usuario_tipo_id"  validate:"required"`
