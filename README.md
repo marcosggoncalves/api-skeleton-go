@@ -1,5 +1,5 @@
  
-# Ambiente para Desenvolvimento
+# Exemplo API Golang com Echo Framework(MYSQL)
 
 Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go](https://golang.org/) e [Air](https://github.com/cosmtrek/air), uma ferramenta de live reload para aplicações Go.
 
