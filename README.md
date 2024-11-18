@@ -1,5 +1,5 @@
  
-#Ambiente para Desenvolvimento
+# Ambiente para Desenvolvimento
 
 Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go](https://golang.org/) e [Air](https://github.com/cosmtrek/air), uma ferramenta de live reload para aplicações Go.
 
@@ -51,7 +51,7 @@ O servidor será iniciado com suporte a live reload. Qualquer alteração no có
 
 # Documentação Paginação
 
-Pacote fornece uma implementação eficiente de paginação para aplicações utilizando **Echo** e **GORM**, permitindo consultas otimizadas com filtros, preload de relacionamentos e metadados.
+O recurso fornece uma implementação eficiente de paginação para aplicações utilizando **Echo** e **GORM**, permitindo consultas otimizadas com filtros, preload de relacionamentos e metadados.
 
 ---
 
@@ -167,13 +167,8 @@ GET /users?page=1&limit=10
   ]
 }
 ```
-
----
-
 ## Vantagens do Padrão
 
 - **Modularidade**: Lógica de acesso ao banco isolada no repositório.
 - **Reutilização**: `Paginate` pode ser usado em diferentes repositórios.
 - **Extensibilidade**: Fácil inclusão de filtros e preload de relacionamentos conforme necessário.
-
-Agora, você pode integrar paginação de forma organizada e eficiente na sua aplicação! 🚀
