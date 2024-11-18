@@ -1,16 +1,16 @@
-```markdown
+ 
 # Setup do Ambiente para Desenvolvimento com Go e Air
 
 Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go](https://golang.org/) e [Air](https://github.com/cosmtrek/air), uma ferramenta de live reload para aplicações Go.
 
----
+ 
 
 ## Pré-requisitos
 
 - Sistema operacional: Windows, macOS ou Linux
 - Terminal ou prompt de comando com permissões administrativas
 
----
+ 
 
 ## Instalação do Go
 
@@ -21,23 +21,7 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
    ```bash
    go version
    ```
-   O comando acima deve retornar a versão instalada do Go.
-
-5. Adicione o diretório `$GOPATH/bin` ao PATH do sistema, caso necessário:
-   - **Linux/macOS**: Edite o arquivo `~/.bashrc` ou `~/.zshrc`:
-     ```bash
-     export PATH=$PATH:$(go env GOPATH)/bin
-     ```
-     Depois, recarregue o arquivo de configuração:
-     ```bash
-     source ~/.bashrc
-     # ou
-     source ~/.zshrc
-     ```
-   - **Windows**: Adicione `%GOPATH%\bin` às variáveis de ambiente do sistema.
-
----
-
+ 
 ## Instalação do Air
 
 1. Instale o Air usando o comando `go install`:
@@ -49,8 +33,6 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
    air -v
    ```
    O comando acima deve retornar a versão instalada do Air.
-
----
 
 ## Executando o Air no Projeto
 
