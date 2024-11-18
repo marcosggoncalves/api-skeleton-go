@@ -10,14 +10,15 @@ import (
 
 type Usuario struct {
 	BaseModel
-	Nome  string `json:"nome" validate:"required"`
-	CPF   string `json:"cpf" validate:"required"`
-	Email string `json:"email" validate:"required"`
-	Senha string `json:"senha" validate:"required"`
+	Nome        string      `json:"nome" validate:"required"`
+	CPF         string      `json:"cpf" validate:"required"`
+	Email       string      `json:"email" validate:"required"`
+	Senha       string      `json:"senha" validate:"required"`
+	UsuarioTipo UsuarioTipo `json:"tipo" gorm:"foreignKey:UsuarioTipoID" validate:"-"`
 }
 
 type UsuarioView struct {
-	BaseModel
+	ID            uint        `json:"id"`
 	Nome          string      `json:"nome"`
 	CPF           string      `json:"cpf"`
 	UsuarioTipoID uint        `json:"usuario_tipo_id"  validate:"required"`
