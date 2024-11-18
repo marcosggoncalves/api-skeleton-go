@@ -8,33 +8,39 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
 ## Pré-requisitos
 
 - Sistema operacional: Windows, macOS ou Linux
-- Terminal ou prompt de comando com acesso administrativo
+- Terminal ou prompt de comando com permissões administrativas
 
 ---
 
 ## Instalação do Go
 
 1. Acesse a página oficial de downloads do Go: [https://golang.org/dl/](https://golang.org/dl/).
-2. Baixe o instalador adequado para seu sistema operacional.
-3. Siga as instruções do instalador.
-4. Após a instalação, verifique se o Go foi instalado corretamente:
+2. Baixe o instalador correspondente ao seu sistema operacional.
+3. Siga as instruções do instalador para completar a instalação.
+4. Verifique se o Go foi instalado corretamente:
    ```bash
    go version
    ```
    O comando acima deve retornar a versão instalada do Go.
 
-5. Adicione o diretório `$GOPATH/bin` ao PATH do sistema (se necessário):
-   - Linux/MacOS: Edite o arquivo `~/.bashrc` ou `~/.zshrc`:
+5. Adicione o diretório `$GOPATH/bin` ao PATH do sistema, caso necessário:
+   - **Linux/macOS**: Edite o arquivo `~/.bashrc` ou `~/.zshrc`:
      ```bash
      export PATH=$PATH:$(go env GOPATH)/bin
      ```
-   - Windows: Adicione `%GOPATH%\bin` às variáveis de ambiente.
+     Depois, recarregue o arquivo de configuração:
+     ```bash
+     source ~/.bashrc
+     # ou
+     source ~/.zshrc
+     ```
+   - **Windows**: Adicione `%GOPATH%\bin` às variáveis de ambiente do sistema.
 
 ---
 
 ## Instalação do Air
 
-1. Instale o Air via `go install`:
+1. Instale o Air usando o comando `go install`:
    ```bash
    go install github.com/cosmtrek/air@latest
    ```
@@ -42,29 +48,29 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
    ```bash
    air -v
    ```
-   O comando acima deve retornar a versão do Air instalada.
+   O comando acima deve retornar a versão instalada do Air.
 
 ---
 
-## Rodando o Air no Projeto
+## Executando o Air no Projeto
 
 1. Certifique-se de estar no diretório raiz do projeto.
-2. Navegue até a pasta `cmd/server`:
+2. Navegue até a pasta `cmd/server` (ou o diretório principal do servidor Go no projeto):
    ```bash
    cd cmd/server
    ```
-3. Execute o Air:
+3. Inicie o Air:
    ```bash
    air
    ```
 
-O servidor será iniciado com suporte a live reload. Qualquer alteração no código-fonte automaticamente reiniciará o servidor.
+O servidor será iniciado com suporte a live reload. Qualquer alteração no código-fonte reiniciará o servidor automaticamente.
 
+---
 
 ## Recursos
 
 - [Documentação do Go](https://golang.org/doc/)
 - [Repositório do Air](https://github.com/cosmtrek/air)
 ```
-
-Este arquivo fornece um guia completo para a configuração e execução do ambiente de desenvolvimento com Go e Air. Se precisar de mais personalizações ou esclarecimentos, é só pedir! 😊
+ 
