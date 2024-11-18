@@ -1,5 +1,5 @@
  
-# Setup do Ambiente para Desenvolvimento com Go e Air
+#Ambiente para Desenvolvimento
 
 Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go](https://golang.org/) e [Air](https://github.com/cosmtrek/air), uma ferramenta de live reload para aplicações Go.
 
@@ -47,12 +47,3 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
    ```
 
 O servidor será iniciado com suporte a live reload. Qualquer alteração no código-fonte reiniciará o servidor automaticamente.
-
----
-
-## Recursos
-
-- [Documentação do Go](https://golang.org/doc/)
-- [Repositório do Air](https://github.com/cosmtrek/air)
-```
- 
