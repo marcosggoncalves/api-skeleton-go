@@ -213,7 +213,7 @@ docker-compose logs -f
 Após iniciar os serviços, você pode acessar a aplicação através do seguinte URL no seu navegador:
 
 - Acesse a API: [http://localhost:8080](http://localhost:8080)
-- Acesse o PHPMyAdmin: [http://localhost:8082](http://localhost:8081)
+- Acesse o PHPMyAdmin: [http://localhost:8081](http://localhost:8081)
 
 ---
 
