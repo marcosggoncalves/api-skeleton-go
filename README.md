@@ -193,7 +193,7 @@ Isso iniciará o serviço MySQL. O contêiner estará acessível na porta `3306`
 Depois que o MySQL estiver rodando, suba o restante dos serviços da aplicação (Go + Air):
 
 ```bash
-docker-compose up -d
+docker-compose up -d 
 ```
 
 O servidor Go estará acessível na porta `8080`.
@@ -205,6 +205,15 @@ Verifique os logs dos contêineres para garantir que tudo está rodando corretam
 ```bash
 docker-compose logs -f
 ```
+
+---
+
+# Acesse a aplicação
+
+Após iniciar os serviços, você pode acessar a aplicação através do seguinte URL no seu navegador:
+
+- Acesse a API: [http://localhost:8080](http://localhost:8080)
+- Acesse o PHPMyAdmin: [http://localhost:8082](http://localhost:8081)
 
 ---
 
@@ -221,4 +230,4 @@ docker-compose down
 
 ---
 
-Agora sua aplicação está configurada para rodar com Docker, incluindo o MySQL e o servidor Go com suporte a live reload utilizando o Air.
+Agora sua aplicação está configurada para rodar com Docker, incluindo o MySQL, o servidor Go com suporte a live reload utilizando o Air e o PHPMyAdmin.
