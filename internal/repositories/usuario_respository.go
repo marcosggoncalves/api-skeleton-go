@@ -14,7 +14,7 @@ type UserRepository interface {
 	Detalhar(id int) (*models.Usuario, error)
 	Listagem(c echo.Context) (*pagination.Pagination, error)
 	Novo(user *models.Usuario) error
-	Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error)
+	Editar(id int, updated *models.Usuario) (*models.Usuario, error)
 	Deletar(id int) error
 }
 
@@ -58,12 +58,12 @@ func (r *userRepository) Novo(user *models.Usuario) error {
 	return r.db.Save(user).Error
 }
 
-func (r *userRepository) Editar(id int, updatedUser *models.Usuario) (*models.Usuario, error) {
+func (r *userRepository) Editar(id int, updated *models.Usuario) (*models.Usuario, error) {
 	user := new(models.Usuario)
 	if err := r.db.First(user, id).Error; err != nil {
 		return nil, err
 	}
-	if err := r.db.Model(user).Updates(updatedUser).Error; err != nil {
+	if err := r.db.Model(user).Updates(updated).Error; err != nil {
 		return nil, err
 	}
 	return user, nil

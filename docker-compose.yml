@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: 'api_golang'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/api_golang
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: 'mysql_db'
+    environment:
+      MYSQL_ROOT_PASSWORD: golang
+      MYSQL_DATABASE: golang
+      MYSQL_USER: golang
+      MYSQL_PASSWORD: golang
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql # Restaura o backup
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: 'phpmyadmin'
+    environment:
+      PMA_HOST: mysql # Nome do host do serviço mysql
+      PMA_USER: golang # Nome do usuário do banco de dados
+      PMA_PASSWORD: golang # Senha do usuário do banco de dados
+    ports:
+      - "8081:80" 
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
