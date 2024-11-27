@@ -1,7 +1,3 @@
-
-DROP DATABASE IF EXISTS usuarios;
-CREATE DATABASE usuarios;
-
 CREATE TABLE usuario_tipo (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NULL,
@@ -27,3 +23,5 @@ CREATE TABLE usuario (
   deleted_at TIMESTAMP DEFAULT NULL
 );
 
+INSERT INTO `usuario` (`id`, `nome`, `cpf`, `email`, `senha`, `usuario_tipo_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Marcos Lopes', '000.000.000-10', 'marcos.ggoncalves.pr@gmail.com', '$2a$10$bNRfGNjv31x9qLLif.9EOe7Vd5XFSAOlhJMi3a8f6nHhm0OY6ABF.', 1, '2024-11-27 03:19:44', '2024-11-27 03:19:44', NULL);

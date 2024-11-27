@@ -1,16 +1,11 @@
- 
-# Exemplo API Golang com Echo Framework(MYSQL)
+# Exemplo API Golang com Echo Framework (PostgreSQL)
 
 Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go](https://golang.org/) e [Air](https://github.com/cosmtrek/air), uma ferramenta de live reload para aplicações Go.
-
- 
 
 ## Pré-requisitos
 
 - Sistema operacional: Windows, macOS ou Linux
 - Terminal ou prompt de comando com permissões administrativas
-
- 
 
 ## Instalação do Go
 
@@ -21,7 +16,7 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
    ```bash
    go version
    ```
- 
+
 ## Instalação do Air
 
 1. Instale o Air usando o comando `go install`:
@@ -48,6 +43,7 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
 
 O servidor será iniciado com suporte a live reload. Qualquer alteração no código-fonte reiniciará o servidor automaticamente.
 
+---
 
 # Documentação Paginação
 
@@ -149,26 +145,87 @@ GET /users?page=1&limit=10
 **Resposta:**
 ```json
 {
-  "total_records": 50,
-  "total_pages": 5,
-  "items": [
-    {
-      "id": 1,
-      "name": "João Silva",
-      "email": "joao.silva@exemplo.com",
-      "usuario_tipo": "admin"
-    },
-    {
-      "id": 2,
-      "name": "Maria Souza",
-      "email": "maria.souza@exemplo.com",
-      "usuario_tipo": "user"
-    }
-  ]
+    "total_records": 3,
+    "total_pages": 1,
+    "items": [
+        {
+            "id": 1,
+            "nome": "Marcos Lopes Gonçalves",
+            "cpf": "069.389.123-11",
+            "usuario_tipo_id": 1,
+            "tipo": {
+                "ID": 1,
+                "CreatedAt": "2024-11-18T12:46:49.003212Z",
+                "UpdatedAt": "2024-11-18T12:46:49.003212Z",
+                "DeletedAt": null,
+                "nome": "Comum"
+            }
+        }
+    ]
 }
 ```
+
 ## Vantagens do Padrão
 
 - **Modularidade**: Lógica de acesso ao banco isolada no repositório.
 - **Reutilização**: `Paginate` pode ser usado em diferentes repositórios.
 - **Extensibilidade**: Fácil inclusão de filtros e preload de relacionamentos conforme necessário.
+
+---
+
+# Subindo a Aplicação com Docker
+
+Para iniciar a aplicação com PostgreSQL, siga os passos abaixo:
+
+1. **Subir o PostgreSQL**
+
+Abra um terminal e navegue até o diretório raiz do projeto. Primeiro, suba o contêiner PostgreSQL:
+
+```bash
+docker-compose up -d postgres
+```
+
+Isso iniciará o serviço PostgreSQL. O contêiner estará acessível na porta `5432`.
+
+2. **Subir os demais serviços**
+
+Depois que o PostgreSQL estiver rodando, suba o restante dos serviços da aplicação (Go + Air + PGAdmin):
+
+```bash
+docker-compose up -d
+```
+
+O servidor Go estará acessível na porta `8080`.
+
+3. **Verificar se tudo está funcionando**
+
+Verifique os logs dos contêineres para garantir que tudo está rodando corretamente:
+
+```bash
+docker-compose logs -f
+```
+
+---
+
+# Acesse a aplicação
+
+Após iniciar os serviços, você pode acessar a aplicação através do seguinte URL no seu navegador:
+
+- Acesse a API: [http://localhost:8080](http://localhost:8080)
+
+---
+
+# Parando a Aplicação
+
+Para parar a aplicação e desligar os contêineres Docker, siga os passos abaixo:
+
+1. Abra um terminal e navegue até o diretório raiz do projeto.
+2. Execute o seguinte comando para parar e remover os contêineres, redes e volumes criados:
+
+```bash
+docker-compose down
+```
+
+---
+
+Agora sua aplicação está configurada para rodar com Docker, incluindo o **PostgreSQL**, o servidor Go com suporte a live reload utilizando o Air.

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: 'api_golang'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/api_golang
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    container_name: 'postgres_db'
+    environment:
+      POSTGRES_USER: golang
+      POSTGRES_PASSWORD: golang
+      POSTGRES_DB: golang
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "5433:5432"
+      
+volumes:
+  postgres_data:
