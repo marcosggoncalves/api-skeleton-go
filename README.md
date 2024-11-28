@@ -183,7 +183,7 @@ Para iniciar a aplicação, siga os passos abaixo:
 Abra um terminal e navegue até o diretório raiz do projeto. Primeiro, suba o contêiner MySQL:
 
 ```bash
-docker-compose up -d mysql
+docker-compose up --build mysql -d
 ```
 
 Isso iniciará o serviço MySQL. O contêiner estará acessível na porta `3306`.
