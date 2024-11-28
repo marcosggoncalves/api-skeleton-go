@@ -182,7 +182,7 @@ Para iniciar a aplicação com PostgreSQL, siga os passos abaixo:
 Abra um terminal e navegue até o diretório raiz do projeto. Primeiro, suba o contêiner PostgreSQL:
 
 ```bash
-docker-compose up -d postgres
+docker-compose  up --build postgres -d
 ```
 
 Isso iniciará o serviço PostgreSQL. O contêiner estará acessível na porta `5432`.
