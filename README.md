@@ -22,7 +22,7 @@ Este guia detalha como configurar o ambiente para desenvolvimento utilizando [Go
 
 1. Instale o Air usando o comando `go install`:
    ```bash
-   go install github.com/cosmtrek/air@latest
+   go install github.com/cosmtrek/air@v1.42.0
    ```
 2. Verifique se o Air foi instalado corretamente:
    ```bash
